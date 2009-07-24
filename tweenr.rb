@@ -1,8 +1,10 @@
 require 'erb'
 
 @template = "svg.erb"
-@cx = 0
-@cy = 0
+
+Circle = Struct.new(:x, :y)
+
+@circle = Circle.new(0, 0)
 
 def frame_id(number)
   "output/tween#{sprintf("%.4d", number)}"
@@ -22,7 +24,7 @@ def graphic(number)
 end
 
 (0..100).each do |number|
-  @cx = number * 9
-  @cy = number * 7
+  @circle.x = number * 9
+  @circle.y = number * 7
   graphic(number)
 end
