@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="1280" height="720" viewBox="0 0 1028 720"
+     xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <desc>tweeeeeen</desc>
+  <% @circles.each do |circle| %>
+  <circle cx="<%= circle.x %>" cy="<%= circle.y %>" r="<%= circle.radius %>"
+          fill="blue" stroke="blue" stroke-width="10"  />
+  <% end %>
+</svg>
+
