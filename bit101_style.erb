@@ -4,6 +4,14 @@
 <svg width="1280" height="720" viewBox="0 0 1280 720"
      xmlns="http://www.w3.org/2000/svg" version="1.1">
   <desc>tweeeeeen</desc>
+
+  <!-- filter -->
+  <defs>
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="<%= rand(10) + 1 %>"/>
+    </filter>
+  </defs>
+
   <!-- background -->
   <rect x="0"
         y="0"
@@ -11,21 +19,24 @@
         height="720"
         fill="black"/>
 
-  <% @circles.each do |circle| %>
-  <circle cx="<%= circle.x %>"
-	        cy="<%= circle.y %>"
-	        r="<%= circle.radius %>"
-          fill="black"
-          stroke="black"
-          stroke-width="10"  />
-    <% next unless circle.connections %>
-    <% circle.connections.each do |connection| %>
-			<line x1="<%= circle.x %>"
-				    y1="<%= circle.y %>"
-				    x2="<%= connection.x %>"
-				    y2="<%= connection.y %>"
-				    stroke="blue"
-				    stroke-width="3"  />
+  <!-- animation -->
+  <g filter="url(#blur)">
+    <% @circles.each do |circle| %>
+    <circle cx="<%= circle.x %>"
+            cy="<%= circle.y %>"
+            r="<%= circle.radius %>"
+            fill="black"
+            stroke="black"
+            stroke-width="10"  />
+      <% next unless circle.connections %>
+      <% circle.connections.each do |connection| %>
+        <line x1="<%= circle.x %>"
+              y1="<%= circle.y %>"
+              x2="<%= connection.x %>"
+              y2="<%= connection.y %>"
+              stroke="blue"
+              stroke-width="3"  />
+      <% end %>
     <% end %>
-  <% end %>
+  </g>
 </svg>

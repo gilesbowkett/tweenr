@@ -63,7 +63,8 @@ def graphic(number)
   File.open("#{frame_id(number)}.svg", "w") do |file|
     file.write render("bit101_style.erb")
   end
-  system("convert #{frame_id(number)}.svg #{frame_id(number)}.jpg")
+  # system("convert #{frame_id(number)}.svg #{frame_id(number)}.jpg")
+  system("java -jar ~/Downloads/batik-1.7/batik-rasterizer.jar #{frame_id(number)}.svg")
   File.unlink("#{frame_id(number)}.svg")
   print "+"
 end
@@ -86,7 +87,7 @@ end
 # here we go
 
 start
-(0..90).each do |number|
+(0..30).each do |number|
   @circles.each {|circle| circle.move}
 
   @circles.stepwise do |circle1, circle2|
