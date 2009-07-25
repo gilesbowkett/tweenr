@@ -12,7 +12,7 @@ end
 
 require 'erb'
 
-@communication_threshold_distance = 50
+@communication_threshold_distance = 175
 
 Velocity = Struct.new(:x, :y)
 Circle = Struct.new(:x, :y, :radius, :velocity) do
@@ -20,6 +20,30 @@ Circle = Struct.new(:x, :y, :radius, :velocity) do
   def move
     self.x += self.velocity.x
     self.y += self.velocity.y
+    bounce_at_boundaries
+    self.connections = []
+  end
+  def reverse
+    self.velocity.x = -1 * self.velocity.x
+    self.velocity.y = -1 * self.velocity.y
+  end
+  def bounce_at_boundaries
+    if self.x < 0
+      self.x = 0
+      reverse
+    end
+    if self.y < 0
+      self.y = 0
+      reverse
+    end
+    if self.x > 1280
+      self.x = 1280
+      reverse
+    end
+    if self.y > 720
+      self.y = 720
+      reverse
+    end
   end
   def communicate(other)
     self.connections ? self.connections << other : self.connections = [other]
@@ -40,7 +64,7 @@ def graphic(number)
     file.write render("bit101_style.erb")
   end
   system("convert #{frame_id(number)}.svg #{frame_id(number)}.jpg")
-  # File.unlink("#{frame_id(number)}.svg")
+  File.unlink("#{frame_id(number)}.svg")
   print "+"
 end
 
@@ -48,9 +72,9 @@ def start
   random_circle = lambda do
     Circle.new(rand(700),
                rand(500),
-               rand(10) + 1,
-               Velocity.new(rand(50),
-                            rand(50)))
+               rand(10) + 10,
+               Velocity.new(rand(50) - 25,
+                            rand(50) - 25))
   end
 
   @circles = []
@@ -62,7 +86,7 @@ end
 # here we go
 
 start
-(0..10).each do |number|
+(0..90).each do |number|
   @circles.each {|circle| circle.move}
 
   @circles.stepwise do |circle1, circle2|
