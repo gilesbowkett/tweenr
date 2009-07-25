@@ -5,8 +5,20 @@
      xmlns="http://www.w3.org/2000/svg" version="1.1">
   <desc>tweeeeeen</desc>
   <% @circles.each do |circle| %>
-  <circle cx="<%= circle.x %>" cy="<%= circle.y %>" r="<%= circle.radius %>"
-          fill="blue" stroke="blue" stroke-width="10"  />
+  <circle cx="<%= circle.x %>"
+	        cy="<%= circle.y %>"
+	        r="<%= circle.radius %>"
+          fill="blue"
+          stroke="blue"
+          stroke-width="10"  />
+    <% next unless circle.connections %>
+    <% circle.connections.each do |connection| %>
+			<line x1="<%= circle.x %>"
+				    y1="<%= circle.y %>"
+				    x2="<%= connection.x %>"
+				    y2="<%= connection.y %>"
+				    stroke="blue"
+				    stroke-width="3"  />
+    <% end %>
   <% end %>
 </svg>
-
