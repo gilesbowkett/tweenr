@@ -40,24 +40,35 @@ Circle = Struct.new(:x, :y, :radius, :depth, :distance_threshold, :velocity) do
       reverse
     end
 
-    if self.x > 1280
-      self.x = 1280
+    if self.x > 1080
+      self.x = 1080
       reverse
     end
 
-    if self.y > 720
-      self.y = 720
+    if self.y > 1920
+      self.y = 1920
       reverse
     end
 
     def stroke_width
       case depth
       when :near
-        3
+        10
       when :mid
-        2
+        4
       when :far
-        1
+        3
+      end
+    end
+
+    def color
+      case depth
+      when :near
+        "hsl(0, 0, 255)"
+      when :mid
+        "hsl(0, 0, 115)"
+      when :far
+        "hsl(0, 0, 40)"
       end
     end
   end
@@ -93,8 +104,8 @@ def start
   options = [:far, :mid, :near]
 
   random_circle = lambda do
-    Circle.new(rand(700),
-               rand(500),
+    Circle.new(rand(1080),
+               rand(1920),
                rand(10) + 10,
                options.sample,
                175,
@@ -103,7 +114,7 @@ def start
   end
 
   @circles = []
-  20.times {@circles << random_circle[]}
+  65.times {@circles << random_circle[]}
 end
 
 
@@ -111,21 +122,27 @@ end
 # here we go
 
 start
-(0..30).each do |number|
+(0..90).each do |number|
   @circles.each {|circle| circle.move}
 
-  @circles.stepwise do |circle1, circle2|
-    delta_x = circle1.x - circle2.x
-    delta_y = circle1.y - circle2.y
-    distance = Math.sqrt((delta_x ** 2) + (delta_y ** 2))
+  by_depth = @circles.group_by {|c| c.depth}
 
-    # this if could also draw on persistent phenomena, e.g., heat, so that proximity to other nodes
-    # created effects that only wore off gradually
-    if distance < circle1.distance_threshold
-      circle1.communicate(circle2)
+  [:far, :mid, :near].each do |depth|
+    circles = by_depth[depth]
+
+    circles.stepwise do |circle1, circle2|
+      delta_x = circle1.x - circle2.x
+      delta_y = circle1.y - circle2.y
+      distance = Math.sqrt((delta_x ** 2) + (delta_y ** 2))
+
+      # this if could also draw on persistent phenomena, e.g., heat, so that proximity to other nodes
+      # created effects that only wore off gradually
+      if distance < circle1.distance_threshold
+        circle1.communicate(circle2)
+      end
+
+      print "."
     end
-
-    print "."
   end
 
   graphic(number)

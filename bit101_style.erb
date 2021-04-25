@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
   "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="1280" height="720" viewBox="0 0 1280 720"
+<svg width="1080" height="1920" viewBox="0 0 1080 1920"
      xmlns="http://www.w3.org/2000/svg" version="1.1">
   <desc>tweeeeeen</desc>
 
@@ -15,27 +15,27 @@
   <!-- background -->
   <rect x="0"
         y="0"
-        width="1280"
-        height="720"
-        fill="black"/>
+        width="1080"
+        height="1920"
+        fill="hsl(0, 0, 0"/>
 
   <!-- animation -->
   <g filter="url(#blur)">
-    <% @circles.each do |circle| %>
-    <circle cx="<%= circle.x %>"
-            cy="<%= circle.y %>"
-            r="<%= circle.radius %>"
-            fill="black"
-            stroke="black"
-            stroke-width="10"  />
-      <% next unless circle.connections %>
-      <% circle.connections.each do |connection| %>
-        <line x1="<%= circle.x %>"
-              y1="<%= circle.y %>"
-              x2="<%= connection.x %>"
-              y2="<%= connection.y %>"
-              stroke="blue"
-              stroke-width="<%= circle.stroke_width %>"  />
+    <% by_depth = @circles.group_by {|c| c.depth} %>
+
+    <% [:far, :mid, :near].each do |depth| %>
+      <% circles = by_depth[depth] %>
+
+      <% circles.each do |circle| %>
+        <% next unless circle.connections %>
+        <% circle.connections.each do |connection| %>
+          <line x1="<%= circle.x %>"
+                y1="<%= circle.y %>"
+                x2="<%= connection.x %>"
+                y2="<%= connection.y %>"
+                stroke="<%= circle.color %>"
+                stroke-width="<%= circle.stroke_width %>" />
+        <% end %>
       <% end %>
     <% end %>
   </g>
