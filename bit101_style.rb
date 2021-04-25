@@ -15,36 +15,44 @@ require 'erb'
 @communication_threshold_distance = 175
 
 Velocity = Struct.new(:x, :y)
+
 Circle = Struct.new(:x, :y, :radius, :velocity) do
   attr_accessor :connections
+
   def move
     self.x += self.velocity.x
     self.y += self.velocity.y
     bounce_at_boundaries
     self.connections = []
   end
+
   def reverse
     self.velocity.x = -1 * self.velocity.x
     self.velocity.y = -1 * self.velocity.y
   end
+
   def bounce_at_boundaries
     if self.x < 0
       self.x = 0
       reverse
     end
+
     if self.y < 0
       self.y = 0
       reverse
     end
+
     if self.x > 1280
       self.x = 1280
       reverse
     end
+
     if self.y > 720
       self.y = 720
       reverse
     end
   end
+
   def communicate(other)
     self.connections ? self.connections << other : self.connections = [other]
   end
@@ -63,9 +71,11 @@ def graphic(number)
   File.open("#{frame_id(number)}.svg", "w") do |file|
     file.write render("bit101_style.erb")
   end
+
   system("convert #{frame_id(number)}.svg #{frame_id(number)}.jpg")
   # system("java -jar ~/Downloads/batik-1.7/batik-rasterizer.jar #{frame_id(number)}.svg")
   File.unlink("#{frame_id(number)}.svg")
+
   print "+"
 end
 
@@ -94,13 +104,17 @@ start
     delta_x = circle1.x - circle2.x
     delta_y = circle1.y - circle2.y
     distance = Math.sqrt((delta_x ** 2) + (delta_y ** 2))
+
     # this if could also draw on persistent phenomena, e.g., heat, so that proximity to other nodes
     # created effects that only wore off gradually
     if distance < @communication_threshold_distance
       circle1.communicate(circle2)
     end
+
     print "."
   end
+
   graphic(number)
 end
+
 puts
