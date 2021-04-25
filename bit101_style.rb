@@ -12,11 +12,9 @@ end
 
 require 'erb'
 
-@communication_threshold_distance = 175
-
 Velocity = Struct.new(:x, :y)
 
-Circle = Struct.new(:x, :y, :radius, :velocity) do
+Circle = Struct.new(:x, :y, :radius, :depth, :distance_threshold, :velocity) do
   attr_accessor :connections
 
   def move
@@ -80,10 +78,15 @@ def graphic(number)
 end
 
 def start
+  # FIXME: Circle#depth should actually be a number from 0 to something
+  options = [:far, :mid, :near]
+
   random_circle = lambda do
     Circle.new(rand(700),
                rand(500),
                rand(10) + 10,
+               options.sample,
+               175,
                Velocity.new(rand(50) - 25,
                             rand(50) - 25))
   end
@@ -107,7 +110,7 @@ start
 
     # this if could also draw on persistent phenomena, e.g., heat, so that proximity to other nodes
     # created effects that only wore off gradually
-    if distance < @communication_threshold_distance
+    if distance < circle1.distance_threshold
       circle1.communicate(circle2)
     end
 
