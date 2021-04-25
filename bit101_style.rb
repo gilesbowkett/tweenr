@@ -49,6 +49,17 @@ Circle = Struct.new(:x, :y, :radius, :depth, :distance_threshold, :velocity) do
       self.y = 720
       reverse
     end
+
+    def stroke_width
+      case depth
+      when :near
+        3
+      when :mid
+        2
+      when :far
+        1
+      end
+    end
   end
 
   def communicate(other)
