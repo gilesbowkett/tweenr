@@ -63,8 +63,8 @@ def graphic(number)
   File.open("#{frame_id(number)}.svg", "w") do |file|
     file.write render("bit101_style.erb")
   end
-  # system("convert #{frame_id(number)}.svg #{frame_id(number)}.jpg")
-  system("java -jar ~/Downloads/batik-1.7/batik-rasterizer.jar #{frame_id(number)}.svg")
+  system("convert #{frame_id(number)}.svg #{frame_id(number)}.jpg")
+  # system("java -jar ~/Downloads/batik-1.7/batik-rasterizer.jar #{frame_id(number)}.svg")
   File.unlink("#{frame_id(number)}.svg")
   print "+"
 end
